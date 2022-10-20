@@ -1,0 +1,464 @@
+<app-spinner-layout></app-spinner-layout>
+<div class="row">
+    <div class="col-md-12">
+    
+<div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5">
+          <h4 class="card-title mb-0">Manage Catagories</h4>
+          <div class="small text-muted">Manage All Catagories </div>
+        </div><!--/.col-->
+        <div class="col-sm-7  d-md-block">
+          
+            <div class="row float-right">
+                <div class=" col-sm-10">
+                <input placeholder="Search"[(ngModel)]="searchText" class="form-control float-right">
+              </div>
+           
+              <div class="col-sm-2">
+                <button type="button"  data-toggle="modal" (click)="create()" (click)="myModal.show()"  class="btn btn-primary float-right"><i class="fa fa-plus-circle"></i></button>
+              </div>
+              
+           
+              </div>
+          
+        </div><!--/.col-->
+    
+ 
+      </div><!--/.row-->
+   <hr/>
+      <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+            <ng-select [loading]="isLoading" (change)="SearchTypes()"  placeholder="Please Select" [items]="lookupTypeList"
+              bindLabel="LookupTypeName" bindValue="LookupTypeID" [(ngModel)]="selectedLookupID">
+            </ng-select>
+          </div>
+      </div>
+      <div class="col-md-2">
+        <!-- <button class="btn btn-success btn-block" (click)="SearchTypes()"  >Search</button> -->
+      </div>
+  
+                
+      </div>
+      
+      <div class="row">
+
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+          <thead>
+            <tr>
+              <th style="width: 10px;" class="text-left" >Children</th>
+           
+            <th class="text-left">Lookup Id</th>   
+              <th class="text-left">Lookup</th>              
+          
+              <th class="text-center">Action</th>
+
+            </tr>
+          </thead>
+          <tbody *ngFor="let val of lookupList |    filter : searchText  ; let i = index ">
+            <tr>
+              <td style="width: 10px;"   align="text-left">  
+                <div>
+                  <a class="text-left" *ngIf="!hideme[i]" (click)="showChildInfo(i,val)">  
+                
+                    <button type="button" style="background-color:blueviolet"   class="btn btn-default  float-left"><i style="color: white" class="fa fa-bars"></i></button>
+                  </a>  
+                  <a class="text-left" *ngIf="hideme[i]" (click)="hideme[i] = !hideme[i]">  
+                    <button type="button" style="background-color:rgb(155, 84, 222)" class="btn btn-dark float-left "><i style="color: white" class="fa fa-minus-circle"></i></button>
+                  </a> 
+                </div>
+                
+              </td>
+        
+              <td  class="text-left">
+             {{val.CodeId}}
+              </td>
+            
+              <td class="text-left" >
+                <strong>{{val.CodeData}}</strong> 
+            
+               </td>
+          
+           
+              <td class="text-center">
+
+                <button (click)="delete(val)" class="btn btn-square btn-danger" type="button"> <i
+                    class="fa fa-trash"></i></button>
+                <button (click)="Edit(val)"  data-toggle="modal" (click)="myModal.show()" class="btn btn-square btn-warning" type="button"> <i class="fa fa-pencil-square-o"></i></button>
+
+              </td>
+            </tr>
+            <tr [hidden]="!hideme[i]" class="sub-table no-bg">  
+              <td align="center"> </td>  
+              <td colspan="15" class="p-0" style="margin-right: 10px;">  
+                <br/>
+                <div class="card border-primary">
+                  <div class="card-header">
+                    Manage Lookup Children
+                    <div class="card-header-actions">
+                      <button type="button"  data-toggle="modal" (click)="addChild(val)" (click)="childModal.show()"  class="btn btn-primary float-right"><i class="fa fa-plus-circle"></i></button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-responsive-sm table-hover table-outline mb-0">  
+                      <thead>  
+                        <tr>  
+                          <th  class="text-center"><i class="fa fa-image"></i></th>
+                          <th>Name</th>              
+                          <th class="text-center">Lookup Static</th>
+                          <th class="text-center">Status</th>        
+                          <th class="text-center">Action</th>
+                            
+                        </tr>  
+                      </thead>  
+                      <tbody>  
+                        <tr *ngFor="let m of childLookUpList">  
+                          <td class="text-center">
+                              <div class="avatar">
+                            <img class="text-center " (click)="viewImage(m.LImage)" *ngIf="m.LImage" alt="No Image" class="img-avatar" src="{{ m.LImage}}">
+                            <img  class="text-center " *ngIf="!m.LImage" alt="No Image" class="img-avatar" src="assets/idea.png">
+                          </div>
+                          </td>
+                          <td class="text-left">{{m.LookupName}}</td>  
+                          <td class="text-center"> 
+                             <span *ngIf="m.LookupStatic" class="badge badge-success">YES</span>
+                            <span *ngIf="!m.LookupStatic" class="badge badge-danger">NO</span>
+                          </td>  
+                          <td class="text-center">
+                            <div> <label class="switch switch-label switch-pill switch-danger">
+                                <input class="switch-input" (change)="changeStatus(m)" type="checkbox" [checked]="m.StatusId==2?true:false">
+                                <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                                </label></div>
+                        </td>
+                          <td class="text-center">
+                            <button (click)="delete(m)" class="btn btn-square btn-danger" type="button"> <i
+                              class="fa fa-trash"></i></button>
+                          <button (click)="EditChild(m)"  data-toggle="modal" (click)="childModal.show()" class="btn btn-square btn-warning" type="button"> <i class="fa fa-pencil-square-o"></i></button>
+                          </td>  
+                           
+                        </tr>  
+                      </tbody>  
+                    </table>  
+                  </div>
+                </div>
+          
+              </td>  
+            </tr> 
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-md-2 text-left">
+        
+          
+          <!-- <button type="button" (click)="getAllRecords()" class="btn btn-success btn-block">Get all Records...</button> -->
+        </div>
+        <div class="col-md-2">
+          <!-- <button type="button" (click)="getMoreRecords()" class="btn btn-primary btn-block">Get More Records..</button> -->
+        </div>
+        <div class="col-md-6">
+          <div class="text-left">
+            <pagination-controls (pageChange)="page = $event" id="1"
+            maxSize="500"
+            responsive="true"
+            screenReaderPaginationLabel="Pagination"
+                            screenReaderPageLabel="page"
+            directionLinks="true"
+            autoHide="true">
+        </pagination-controls>
+      </div>
+        </div>
+        <div class="col-md-2">
+          <!-- <button type="button" (click)="GetCustomerList()" class="btn btn-warning btn-block">Refresh</button> -->
+        </div>
+      </div>
+
+   
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade bd-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> Add / Update LookUp</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+             <form [formGroup]="itemForm" (ngSubmit)="save()" >
+                <div class="form-group">
+               
+                    <input placeholder="LookupId" hidden type="number" class="form-control"   [(ngModel)]="accountInfo.LookupId" formControlName="LookupId">
+                                               
+                  </div>
+                <div class="row">
+                   
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Lookup Type:</label>
+                            <ng-select [items]="lookupTypeList" bindLabel="LookupTypeName" bindValue="LookupTypeID"
+                              placeholder="Select Lookup Type" formControlName="LookupTypeID" [(ngModel)]="accountInfo.LookupTypeID">
+                            </ng-select>
+                            <div
+                              *ngIf="itemForm.controls['LookupTypeID'].invalid && (itemForm.controls['LookupTypeID'].dirty || itemForm.controls['LookupTypeID'].touched)"
+                              class="danger">
+                              <span *ngIf="itemForm.controls['LookupTypeID'].errors.required">
+                                <span style="color: red;">Select Lookup Type.</span>
+                              </span>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label >Lookup:</label>
+                              <input placeholder="Lookup" class="form-control"   [(ngModel)]="accountInfo.LookupName" formControlName="LookupName">
+                              <div *ngIf="itemForm.controls['LookupName'].invalid && (itemForm.controls['LookupName'].dirty || itemForm.controls['LookupName'].touched)" class="ng-dirty" >
+                                      <span *ngIf="itemForm.controls['LookupName'].errors.required">
+                                          <span style="color: red;">Please select Parent.</span>  
+                                      </span>
+                                  </div>
+                            
+                          </div>
+                    </div>
+                </div>
+           
+                
+           
+              <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Lookup Static:</label>
+                        <div class="form-group row">
+        
+                          <div class="col-md-9 col-form-label">
+                            <div id="inline-radios" class="form-check form-check-inline mr-1">
+                              <input type="radio" name="LookupStatic" id="LookupStatic" [value]="true"
+                                [(ngModel)]="accountInfo.LookupStatic" formControlName="LookupStatic" class="form-check-input">
+                              <label for="inlineRadio1" class="form-check-label">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline mr-1">
+                              <input type="radio" name="LookupStatic" id="LookupStatic" [value]="false"
+                                [(ngModel)]="accountInfo.LookupStatic" formControlName="LookupStatic" class="form-check-input">
+                              <label for="inlineRadio2" class="form-check-label">No</label>
+                            </div>
+        
+                          </div>
+                        </div>
+                        <div
+                          *ngIf="itemForm.controls['LookupStatic'].invalid && (itemForm.controls['LookupStatic'].dirty || itemForm.controls['LookupStatic'].touched)"
+                          class="ng-dirty">
+                          <span *ngIf="itemForm.controls['LookupStatic'].errors.required">
+                            <span style="color: red;">Please Choose .</span>
+                          </span>
+                        </div>
+        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Images:</label>
+                        <input placeholder="Images" #myInput id="exampleInputFile" type="file" (change)="onOutlineFileChange($event)" class="form-control"
+                          [(ngModel)]="accountInfo.Images" formControlName="Images">
+                        <div
+                          *ngIf="itemForm.controls['Images'].invalid && (itemForm.controls['Images'].dirty || itemForm.controls['Images'].touched)"
+                          class="ng-dirty">
+                          <span *ngIf="itemForm.controls['Images'].errors.required">
+                            <span style="color: red;">Please Enter .</span>
+                          </span>
+                        </div>
+        
+                      </div>
+                </div>
+                <div *ngIf="selectedImageUrl" class="col-md-2">
+                  <br>
+                  <div class="avatar">
+                  
+                    <img *ngIf="selectedImageUrl" alt="No Image" class="img-avatar" src="{{ selectedImageUrl}}">
+                   
+                   
+                  </div>
+                </div>
+              </div>
+           
+             
+              <div class="form-group">
+                <label >Comments:</label>
+                  <input placeholder="Comments" class="form-control"   [(ngModel)]="accountInfo.Comments" formControlName="Comments"/>
+                  <div *ngIf="itemForm.controls['Comments'].invalid && (itemForm.controls['Comments'].dirty || itemForm.controls['Comments'].touched)" class="ng-dirty" >
+                          <span *ngIf="itemForm.controls['Comments'].errors.required">
+                              <span style="color: red;">Please Enter .</span>  
+                          </span>
+                      </div>
+                
+              </div>
+
+              <br>
+              <div class="modal-footer">
+                  <button type="submit"   class="btn btn-sm btn-primary" type="submit">
+                      <i class="fa fa-dot-circle-o"></i> Submit</button>
+                      <button (click)="Reset()" class="btn btn-sm btn-danger" type="reset">
+                          <i class="fa fa-ban"></i> Reset</button>
+             
+              </div>
+            </form>
+        </div>
+       
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <div bsModal #childModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade bd-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add/Update Children</h4>
+          <button type="button" class="close" (click)="childModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+             <form [formGroup]="itemForm" (ngSubmit)="saveLookUpChild()" >
+                <div class="form-group">
+               
+                    <input placeholder="LookupId" hidden type="number" class="form-control"   [(ngModel)]="accountInfo.LookupId" formControlName="LookupId">
+                                               
+                  </div>
+                <div class="row">
+                   
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Lookup Type:</label>
+                            <ng-select [items]="lookupTypeList" bindLabel="LookupTypeName" bindValue="LookupTypeID"
+                              placeholder="Select Lookup Type" formControlName="LookupTypeID" [(ngModel)]="accountInfo.LookupTypeID">
+                            </ng-select>
+                            <div
+                              *ngIf="itemForm.controls['LookupTypeID'].invalid && (itemForm.controls['LookupTypeID'].dirty || itemForm.controls['LookupTypeID'].touched)"
+                              class="danger">
+                              <span *ngIf="itemForm.controls['LookupTypeID'].errors.required">
+                                <span style="color: red;">Choose Lookup Type.</span>
+                              </span>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Parent:</label>
+                        <ng-select [items]="lookupList2" bindLabel="LookupName" bindValue="LookupId"
+                          placeholder="Select Parent " formControlName="ParentId" [(ngModel)]="accountInfo.ParentId">
+                        </ng-select>
+                        <div
+                          *ngIf="itemForm.controls['ParentId'].invalid && (itemForm.controls['ParentId'].dirty || itemForm.controls['ParentId'].touched)"
+                          class="danger">
+                          <span *ngIf="itemForm.controls['ParentId'].errors.required">
+                            <span style="color: red;">Choose Parent.</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+           
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label >Lookup Name:</label>
+                      <input placeholder="Lookup Name" class="form-control"   [(ngModel)]="accountInfo.LookupName" formControlName="LookupName">
+                      <div *ngIf="itemForm.controls['LookupName'].invalid && (itemForm.controls['LookupName'].dirty || itemForm.controls['LookupName'].touched)" class="ng-dirty" >
+                              <span *ngIf="itemForm.controls['LookupName'].errors.required">
+                                  <span style="color: red;">Please Enter .</span>  
+                              </span>
+                          </div>
+                    
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label >Lookup Static:</label>
+                    <div class="form-group row">
+    
+                      <div class="col-md-9 col-form-label">
+                        <div id="inline-radios" class="form-check form-check-inline mr-1">
+                          <input type="radio" name="LookupStatic" id="LookupStatic" [value]="true"
+                            [(ngModel)]="accountInfo.LookupStatic" formControlName="LookupStatic" class="form-check-input">
+                          <label for="inlineRadio1" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline mr-1">
+                          <input type="radio" name="LookupStatic" id="LookupStatic" [value]="false"
+                            [(ngModel)]="accountInfo.LookupStatic" formControlName="LookupStatic" class="form-check-input">
+                          <label for="inlineRadio2" class="form-check-label">No</label>
+                        </div>
+    
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="itemForm.controls['LookupStatic'].invalid && (itemForm.controls['LookupStatic'].dirty || itemForm.controls['LookupStatic'].touched)"
+                      class="ng-dirty">
+                      <span *ngIf="itemForm.controls['LookupStatic'].errors.required">
+                        <span style="color: red;">Please Choose .</span>
+                      </span>
+                    </div>
+    
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Images:</label>
+                    <input placeholder="Images" #myInput id="exampleInputFile" type="file" (change)="onOutlineFileChange($event)" class="form-control"
+                      [(ngModel)]="accountInfo.Images" formControlName="Images">
+                    <div
+                      *ngIf="itemForm.controls['Images'].invalid && (itemForm.controls['Images'].dirty || itemForm.controls['Images'].touched)"
+                      class="ng-dirty">
+                      <span *ngIf="itemForm.controls['Images'].errors.required">
+                        <span style="color: red;">Please Enter .</span>
+                      </span>
+                    </div>
+                    <div *ngIf="selectedImageUrl" class="col-md-2">
+                      <br>
+                      <div class="avatar">
+                      
+                        <img *ngIf="selectedImageUrl" alt="No Image" class="img-avatar" src="{{ selectedImageUrl}}">
+                       
+                       
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label >Comments:</label>
+                  <textarea rows="3" placeholder="Comments" class="form-control"   [(ngModel)]="accountInfo.Comments" formControlName="Comments"></textarea>
+                  <div *ngIf="itemForm.controls['Comments'].invalid && (itemForm.controls['Comments'].dirty || itemForm.controls['Comments'].touched)" class="ng-dirty" >
+                          <span *ngIf="itemForm.controls['Comments'].errors.required">
+                              <span style="color: red;">Please Enter .</span>  
+                          </span>
+                      </div>
+                
+              </div>
+
+              <br>
+              <div class="modal-footer">
+                  <button type="submit"   class="btn btn-sm btn-primary" type="submit">
+                      <i class="fa fa-dot-circle-o"></i> Submit</button>
+                      <button (click)="Reset()" class="btn btn-sm btn-danger" type="reset">
+                          <i class="fa fa-ban"></i> Reset</button>
+             
+              </div>
+            </form>
+        </div>
+       
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+

@@ -1,0 +1,235 @@
+<app-spinner-layout></app-spinner-layout>
+<div class="row">
+    <div class="col-md-12">
+    
+<div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5">
+          <h4 class="card-title mb-0">Service Centers</h4>
+          <div class="small text-muted">Manage Service Centers</div>
+        </div><!--/.col-->
+        <div class="col-sm-7 d-none d-md-block">
+          
+          <div class="row float-right">
+            <div class=" col-sm-10">
+            <input placeholder="Search"[(ngModel)]="SearchMD.searchText" class="form-control float-right">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" data-toggle="modal" (click)="create()" (click)="myModal.show()" class="btn btn-primary float-right"><i class="fa fa-plus-circle"></i></button>
+          </div>
+          
+       
+          </div>
+          
+        </div><!--/.col-->
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+                <thead >
+                  <tr>
+                    <th class="text-left"><i class="icon-lightbulb"></i></th>                
+                    <th  class="text-left">Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+                 
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let val of serviceCenterList  |    filter : SearchMD.searchText">
+                    <td class="text-left">
+                      <div class="avatar">
+                        
+                        <img *ngIf="val.Logo" alt="No Image" class="img-avatar" src="{{val.Logo}}">
+                        <img *ngIf="!val.Logo" alt="No Image" class="img-avatar" src="../../../assets/servicelogo.png">
+                       
+                      </div>
+                      <!-- <div class="c-avatar"><img class="c-avatar-img"style="width:50px" src="{{ServerName + val.Picture}}" alt="No Image"><span class="c-avatar-status bg-success"></span></div> -->
+                      </td>
+                   
+                    <td class="text-left">
+                        <strong>{{val.ServiceCenterName}}</strong>
+                        <div class="small text-muted">Mobile:{{val.Mobile1 }},{{val.Mobile2 }}</div>
+                        <div class="small text-muted">{{val.CreatedAt | date: 'dd-MMM-yyyy hh:mm: aa'}}</div>
+                    </td>
+                  
+                    <td>
+                        <div>{{val.Description}}</div>
+                     
+                    </td>
+                    <td class="text-center">
+                        <div> <label class="switch switch-label switch-pill switch-danger">
+                            <input class="switch-input" (change)="status(val.ItemNo)" type="checkbox" [checked]="val.Is_Active">
+                            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                            </label></div>
+                    </td>
+                    <td class="text-center">
+                   
+                      <button (click)="deleteCatagory(val)"   class="btn btn-square btn-danger" type="button"> <i class="fa fa-trash"></i></button>
+                        <button (click)="Edit(val)"  data-toggle="modal" (click)="myModal.show()" class="btn btn-square btn-warning" type="button"> <i class="fa fa-pencil-square-o"></i></button>
+                    </td>
+                   
+                  
+                   
+                  </tr>
+                
+                </tbody>
+              </table>
+ 
+      </div><!--/.row-->
+      
+    </div>
+    <div class="card-footer">
+      
+    </div>
+  </div>
+  </div>
+</div>
+  <div bsModal #myModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade bd-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> Service Centers</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="itemForm" (ngSubmit)="save()" >
+                 
+              <div class="form-group">
+                    
+                <input type="hidden"  class="form-control"   [(ngModel)]="accountInfo.ServiceCenterId" formControlName="ServiceCenterId">
+             
+              
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Catagory:</label>
+                        <ng-select [items]="lookupList"  bindLabel="CodeData" bindValue="CodeId"
+                        placeholder="Choose Catagory"  formControlName="CatagoryId" [(ngModel)]="accountInfo.CatagoryId">
+                      </ng-select>
+                          <div *ngIf="itemForm.controls['CatagoryId'].invalid && (itemForm.controls['CatagoryId'].dirty || itemForm.controls['CatagoryId'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['CatagoryId'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>                  
+                      </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Name:</label>
+                          <input placeholder="Service Center Name" class="form-control"   [(ngModel)]="accountInfo.ServiceCenterName" formControlName="ServiceCenterName">
+                          <div *ngIf="itemForm.controls['ServiceCenterName'].invalid && (itemForm.controls['ServiceCenterName'].dirty || itemForm.controls['ServiceCenterName'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['ServiceCenterName'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label >Mobile1:</label>
+                          <input placeholder="Mobile1" class="form-control"   [(ngModel)]="accountInfo.Mobile1" formControlName="Mobile1">
+                          <div *ngIf="itemForm.controls['Mobile1'].invalid && (itemForm.controls['Mobile1'].dirty || itemForm.controls['Mobile1'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Mobile1'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label >Mobile2:</label>
+                          <input placeholder="Mobile2" class="form-control"   [(ngModel)]="accountInfo.Mobile2" formControlName="Mobile2">
+                          <div *ngIf="itemForm.controls['Mobile2'].invalid && (itemForm.controls['Mobile2'].dirty || itemForm.controls['Mobile2'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Mobile2'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label >Email:</label>
+                          <input placeholder="Email" class="form-control"   [(ngModel)]="accountInfo.Email" formControlName="Email">
+                          <div *ngIf="itemForm.controls['Email'].invalid && (itemForm.controls['Email'].dirty || itemForm.controls['Email'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Email'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Break Start Time:</label>
+                        <timepicker [formControlName]="'BreakStartTime'" [(ngModel)]="accountInfo.BreakStartTime"></timepicker>
+                          <!-- <input placeholder="Break Start Time" class="form-control"   [(ngModel)]="accountInfo.BreakStartTime" formControlName="BreakStartTime"> -->
+                          <div *ngIf="itemForm.controls['BreakStartTime'].invalid && (itemForm.controls['BreakStartTime'].dirty || itemForm.controls['BreakStartTime'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['BreakStartTime'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >End of Working Day:</label>
+                        <timepicker [formControlName]="'EndofWorkingDay'" [(ngModel)]="accountInfo.EndofWorkingDay"></timepicker>
+                          <!-- <input placeholder="End of Working Day" class="form-control"   [(ngModel)]="accountInfo.EndofWorkingDay" formControlName="EndofWorkingDay"> -->
+                          <div *ngIf="itemForm.controls['EndofWorkingDay'].invalid && (itemForm.controls['EndofWorkingDay'].dirty || itemForm.controls['EndofWorkingDay'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['EndofWorkingDay'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Logo:</label>
+                          <input type="file" #myInput id="exampleInputFile" name="ImageUrl" name="myfiles" formControlName="Logo" ngModel (change)="onFileChange($event)">
+                         </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Description:</label>
+                          <textarea rows="2" placeholder="Description" class="form-control"   [(ngModel)]="accountInfo.Description" formControlName="Description"></textarea>
+                          <div *ngIf="itemForm.controls['Description'].invalid && (itemForm.controls['Description'].dirty || itemForm.controls['Description'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Description'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                    
+                </div>
+            </div>
+              <br>
+              <div class="modal-footer">
+                  <button type="submit"[disabled]="!itemForm.valid"  class="btn btn-sm btn-primary" type="submit">
+                      <i class="fa fa-dot-circle-o"></i> Submit</button>
+                      <button (click)="Reset()" class="btn btn-sm btn-danger" type="reset">
+                          <i class="fa fa-ban"></i> Reset</button>
+             
+              </div>
+            </form>
+        </div>
+       
+      </div>
+     </div>
+  </div>
+
+
+

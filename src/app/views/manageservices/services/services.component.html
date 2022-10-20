@@ -1,0 +1,229 @@
+<app-spinner-layout></app-spinner-layout>
+<div class="row">
+    <div class="col-md-12">
+    
+<div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-5">
+          <h4 class="card-title mb-0">Manage Services</h4>
+          <div class="small text-muted">Manage Services</div>
+        </div><!--/.col-->
+        <div class="col-sm-7 d-none d-md-block">
+          
+          <div class="row float-right">
+            <div class=" col-sm-10">
+            <input placeholder="Search"[(ngModel)]="SearchMD.searchText" class="form-control float-right">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" data-toggle="modal" (click)="create()" (click)="myModal.show()" class="btn btn-primary float-right"><i class="fa fa-plus-circle"></i></button>
+          </div>
+          </div>
+          
+        </div><!--/.col-->
+   
+ 
+      </div><!--/.row-->
+      <hr>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+              <ng-select  placeholder="Select Service Type" [items]="lookupList"
+                bindLabel="CodeData" bindValue="CodeId" [(ngModel)]="selectedLookupID">
+              </ng-select>
+            </div>
+        </div>
+ 
+      </div>
+     
+      <table class="table table-responsive-sm table-hover table-outline mb-0">
+              <thead >
+                <tr>
+                  <!-- <th class="text-left"><i class="icon-lightbulb"></i></th>          -->
+                  <th  class="text-left">Name</th>
+                  <th class="text-center">Charges</th>
+                  <th class="text-center">Time</th>
+                  <th class="text-center">Description</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Action</th>
+               
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let val of serviceList  |    filter : SearchMD.searchText">
+                  <!-- <td class="text-left">
+                    <div class="avatar">
+                      
+                      <img *ngIf="val.ServiceLogo!=null" alt="No Image" class="img-avatar" src="{{val.ServiceLogo}}">
+                      
+                     
+                    </div>
+                    <li [style.color]="val.Description" *ngIf="val.ServiceLogo==null" class="fa fa-wrench fa-2x"></li>
+                   
+                    </td> -->
+                 
+                  <td class="text-left">
+                      <strong>{{val.ServiceName}}</strong>
+
+                      <!-- <div class="small text-muted">Created:{{val.CreatedAt | date: 'dd-MMM-yyyy hh:mm: a' }}</div> -->
+                      <!-- <div class="small text-muted">{{val.CreatedAt | date: 'dd-MMM-yyyy hh:mm: aa'}}</div> -->
+                  </td>
+                  <td class="text-center">
+                      <div>{{val.Charges }}</div>
+                   
+                  </td>
+                  <td class="text-center">
+                    {{val.TimeRequiredMin}} Min
+                  </td>
+                  <td class="text-center">
+                      <!-- <button [style.background]="val.Description"></button> -->
+                     
+                      <div style="height:30px; border-radius: 5px; " [style.background]="val.Description" class="text-dark">
+                       
+                        </div>
+                   
+                  </td>
+                  <td class="text-center">
+                      <div> <label class="switch switch-label switch-pill switch-danger">
+                          <input class="switch-input" (change)="changeStatus(val)" type="checkbox" [checked]="val.IsActive">
+                          <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                          </label></div>
+                  </td>
+                  <td class="text-center">
+                 
+                    <button (click)="deleteService(val)"   class="btn btn-square btn-danger" type="button"> <i class="fa fa-trash"></i></button>
+                      <button (click)="edit(val)"  data-toggle="modal" (click)="myModal.show()" class="btn btn-square btn-warning" type="button"> <i class="fa fa-pencil-square-o"></i></button>
+                  </td>
+                 
+                
+                 
+                </tr>
+              
+              </tbody>
+            </table>
+    </div>
+    <div class="card-footer">
+      
+    </div>
+  </div>
+  </div>
+</div>
+
+
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade bd-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add/Update Service </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="itemForm" (ngSubmit)="save()" >
+                 
+              <div class="form-group">
+                    
+                <input type="hidden"  class="form-control"   [(ngModel)]="accountInfo.ServiceId" formControlName="ServiceId">
+             
+              
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Service Type:</label>
+                        <ng-select [items]="lookupList"  bindLabel="CodeData" bindValue="CodeId"
+                        placeholder="Choose Service Type"  formControlName="ServiceTypeId" [(ngModel)]="accountInfo.ServiceTypeId">
+                      </ng-select>
+                          <div *ngIf="itemForm.controls['ServiceTypeId'].invalid && (itemForm.controls['ServiceTypeId'].dirty || itemForm.controls['ServiceTypeId'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['ServiceTypeId'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>                  
+                      </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Name:</label>
+                          <input placeholder="Service Name" class="form-control"   [(ngModel)]="accountInfo.ServiceName" formControlName="ServiceName">
+                          <div *ngIf="itemForm.controls['ServiceName'].invalid && (itemForm.controls['ServiceName'].dirty || itemForm.controls['ServiceName'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['ServiceName'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Time Required :</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend"></div>
+                          <input placeholder="Time Required Min" class="form-control"   [(ngModel)]="accountInfo.TimeRequiredMin" formControlName="TimeRequiredMin">
+                          <div class="input-group-append"><span class="input-group-text">$</span></div>
+                        </div>
+                       
+                          <div *ngIf="itemForm.controls['TimeRequiredMin'].invalid && (itemForm.controls['TimeRequiredMin'].dirty || itemForm.controls['TimeRequiredMin'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['TimeRequiredMin'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Charges:</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend"></div>
+                          <input type="number" placeholder="Charges" class="form-control"   [(ngModel)]="accountInfo.Charges" formControlName="Charges">
+                          <div class="input-group-append"><span class="input-group-text">Min</span></div>
+                        </div>       
+                          <div *ngIf="itemForm.controls['Charges'].invalid && (itemForm.controls['Charges'].dirty || itemForm.controls['Charges'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Charges'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                </div>
+            </div>
+   
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Logo:</label>
+                          <input type="file" #myInput id="exampleInputFile" name="ImageUrl" name="myfiles" formControlName="Logo" ngModel (change)="onFileChange($event)">
+                         </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Description:</label>
+                          <input type="color" placeholder="Description" class="form-control"   [(ngModel)]="accountInfo.Description" formControlName="Description"/>
+                          <div *ngIf="itemForm.controls['Description'].invalid && (itemForm.controls['Description'].dirty || itemForm.controls['Description'].touched)" class="ng-dirty" >
+                                  <span *ngIf="itemForm.controls['Description'].errors.required">
+                                      <span style="color: red;">Please Enter .</span>  
+                                  </span>
+                              </div>
+                        
+                      </div>
+                    
+                </div>
+            </div>
+              <br>
+              <div class="modal-footer">
+                  <button type="submit"[disabled]="!itemForm.valid"  class="btn btn-sm btn-primary" type="submit">
+                      <i class="fa fa-dot-circle-o"></i> Submit</button>
+                      <button (click)="Reset()" class="btn btn-sm btn-danger" type="reset">
+                          <i class="fa fa-ban"></i> Reset</button>
+             
+              </div>
+            </form>
+        </div>
+       
+      </div>
+     </div>
+  </div>
+

@@ -1,0 +1,166 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-7">
+          <h5 class="card-title mb-0">WELCOME</h5>
+          <div class="small text-muted">Control BIT Opertions from one place</div>
+          
+        </div>
+        <!--/.col-->
+
+
+      
+      
+        <div class="col-sm-5 float-right">
+         
+          <h6 class="text-danger float-right">Total Numbers of Markazia Ideas {{TotalCount}}</h6>
+        </div>
+
+
+
+      </div>
+      <hr>
+      
+      <!-- <div class="row">
+        <div class="col-sm-6 col-lg-3">
+          <div class="card text-white bg-primary">
+            <div class="card-body">
+              <div class="h5 m-0">{{TotalTask}}</div>
+              <div>Total Task</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%"></div>
+              </div>
+           
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="card text-white bg-warning">
+            <div class="card-body">
+              <div class="h5 m-0">{{PendingTask}}</div>
+              <div>Pending Tasks</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%"></div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="card text-white bg-danger">
+            <div class="card-body">
+              <div class="h5 m-0">{{CompleteTask}}</div>
+              <div>Completed Tasks</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%"></div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="card text-white bg-info">
+            <div class="card-body">
+              <div class="h5 m-0">{{InProgressTask}}</div>
+              <div>In Progress </div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%"></div>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-sm-6 col-lg-3">
+          <div style="background-color: #FFBA14;"  class="card text-white">
+            <div class="card-body">
+              <div class="h5 m-0">New Ideas</div>
+              <div>{{pendingIdeas}} <span>/</span> {{TotalCount}}</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="getPercentage(pendingIdeas)" class="progress-bar" [style.width.%]="getPercentage(pendingIdeas)"></div>
+                <!-- <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%">
+                </div> -->
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div style="background-color: #8a2e7d;" class="card text-white">
+            <div class="card-body">
+              <div class="h5 m-0">Processing Ideas</div>
+              <div>{{Processing}} <span>/</span> {{TotalCount}}</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="getPercentage(Processing)" class="progress-bar" [style.width.%]="getPercentage(Processing)"></div>
+                <!-- <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%">
+                </div> -->
+              </div>
+            
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div style="background-color:#3bb490"  class="card text-white">
+            <div class="card-body">
+              <div class="h5 m-0"> Applicable Idea</div>
+              <div>{{Applicable}} <span>/</span> {{TotalCount}}</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="getPercentage(Applicable)" class="progress-bar" [style.width.%]="getPercentage(Applicable)"></div>
+             </div>
+           
+            </div>
+          </div>
+        </div>
+    
+     
+        <div class="col-sm-6 col-lg-3">
+          <div style="background-color: #E6005E;"  class="card text-white ">
+            <div class="card-body">
+              <div class="h5 m-0">Not Applicable
+              </div>
+              <div>{{notapplicable}} <span>/</span> {{TotalCount}}</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="getPercentage(notapplicable)" class="progress-bar" [style.width.%]="getPercentage(notapplicable)"></div>
+                <!-- <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%">
+                </div> -->
+              </div>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-lg-3">
+          <div style="background-color: #F60A22"  class="card text-white">
+            <div class="card-body">
+              <div class="h5 m-0">Rejected</div>
+              <div>{{Rejected}} <span>/</span> {{TotalCount}}</div>
+              <div class="progress progress-white progress-xs my-3">
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="getPercentage(Rejected)" class="progress-bar" [style.width.%]="getPercentage(Rejected)"></div>
+                <!-- <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+                  style="width: 25%">
+                </div> -->
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+ 
+
+<div>
+
+</div>
+</div>
